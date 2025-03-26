@@ -93,8 +93,7 @@
             if (saldo < 60000 && Notification.permission === "granted") {
                 new Notification("Ayo Menabung!", {
                     body: `Target Rp60.000, saldo saat ini: Rp${saldo}. Jangan lupa menabung hari ini!`,
-                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" // Ganti dengan URL ikon yang sesuai
-                });
+                 });
             }
         }
 
@@ -105,7 +104,7 @@
             }
         }
 
-        setInterval(cekWaktu, 60000); // Mengecek setiap menit
+        setInterval(cekWaktu, 1800000); // Mengecek setiap menit
     </script>
 </body>
 </html>
