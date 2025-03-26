@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabungan Modal Usaha</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+        }
+        h2 { margin-bottom: 10px; }
+        .saldo {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .target {
+            font-size: 18px;
+            color: #bbb;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover { opacity: 0.8; }
+        .tarik { background: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tabungan Modal Usaha</h2>
+        <p class="target">Target: Rp60.000</p>
+        <p class="saldo">Saldo: Rp <span id="saldo">0</span></p>
+        <button onclick="nabung()">Nabung</button>
+        <button class="tarik" onclick="tarik()">Tarik</button>
+    </div>
+
+    <script>
+        let saldo = localStorage.getItem("saldo") ? parseInt(localStorage.getItem("saldo")) : 0;
+        document.getElementById("saldo").innerText = saldo;
+
+        function nabung() {
+            let jumlah = prompt("Masukkan jumlah yang ingin ditabung:", "2000");
+            jumlah = parseInt(jumlah);
+            if (!isNaN(jumlah) && jumlah > 0) {
+                saldo += jumlah;
+                localStorage.setItem("saldo", saldo);
+                document.getElementById("saldo").innerText = saldo;
+                alert("Berhasil menabung Rp" + jumlah);
+            } else {
+                alert("Masukkan jumlah yang valid!");
+            }
+        }
+
+        function tarik() {
+            let jumlah = prompt("Masukkan jumlah yang ingin ditarik:", "2000");
+            jumlah = parseInt(jumlah);
+            if (!isNaN(jumlah) && jumlah > 0 && jumlah <= saldo) {
+                saldo -= jumlah;
+                localStorage.setItem("saldo", saldo);
+                document.getElementById("saldo").innerText = saldo;
+                alert("Berhasil menarik Rp" + jumlah);
+            } else {
+                alert("Saldo tidak mencukupi atau input tidak valid!");
+            }
+        }
+
+        // Meminta izin notifikasi saat pertama kali membuka halaman
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
+        function kirimNotifikasi() {
+            if (saldo < 60000 && Notification.permission === "granted") {
+                new Notification("Ayo Menabung!", {
+                    body: `Target Rp60.000, saldo saat ini: Rp${saldo}. Jangan lupa menabung hari ini!`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" // Ganti dengan URL ikon yang sesuai
+                });
+            }
+        }
+
+        function cekWaktu() {
+            let sekarang = new Date();
+            if (sekarang.getHours() === 7 && sekarang.getMinutes() === 0) {
+                kirimNotifikasi();
+            }
+        }
+
+        setInterval(cekWaktu, 60000); // Mengecek setiap menit
+    </script>
+</body>
+</html>
